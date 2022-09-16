@@ -1,13 +1,16 @@
 using Godot;
+using System;
 
-public class Player : KinematicBody2D
+public class UnitPlayerController : Node
 {
-	[Export]
-	public float Speed { get; set; } = 5f;
-
+	
+	StatsComponent MyStats;
+	Unit MyUnit;
+	
 	public override void _Ready()
 	{
-
+		MyUnit = GetParent<Unit>();
+		MyStats = MyUnit.GetNode<StatsComponent>("StatsComponent");
 	}
 
 	public override void _Input(InputEvent @event)
@@ -20,15 +23,24 @@ public class Player : KinematicBody2D
 	{
 		var dirX = Input.GetAxis("ui_left", "ui_right");
 		var dirY = Input.GetAxis("ui_up", "ui_down");
-		MoveAndSlide(new Vector2(dirX, dirY).Normalized() * 200f);
 		
+		var moveDirection = new Vector2(dirX, dirY).Normalized();
+		MyUnit.MoveInDirection(moveDirection);
+		
+		__TestTargetAcquisition();
+	}
+	
+	
+	
+	
+	public void __TestTargetAcquisition()
+	{
 		if (Input.IsActionPressed("ui_accept")) {
 			var targetAcquirer = GetNode<TargetAcquirer>("TargetAcquirer");
-			var foundKBody = targetAcquirer.AcquireTarget(exclude: this);
+			var foundKBody = targetAcquirer.AcquireTarget(exclude: MyUnit);
 			if (foundKBody != null)
 				GD.Print(foundKBody.Name);
 		}
 	}
-	
 	
 }

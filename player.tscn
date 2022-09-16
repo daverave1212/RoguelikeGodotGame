@@ -93,11 +93,11 @@ script = ExtResource( 2 )
 position = Vector2( 0, -1.33333 )
 shape = SubResource( 18 )
 
-[node name="Animated Sprite" type="AnimatedSprite" parent="."]
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 light_mask = 2
 frames = SubResource( 17 )
 animation = "idle"
-frame = 1
+frame = 6
 playing = true
 offset = Vector2( 0, -16 )
 
