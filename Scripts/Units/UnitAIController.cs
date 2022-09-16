@@ -18,8 +18,6 @@ public class UnitAIController : Node
 		var dirX = (float) (random.NextDouble() * 2 - 1);
 		var dirY = (float) (random.NextDouble() * 2 - 1);
 		
-		GD.Print(dirX);
-		
 		var moveDirection = new Vector2(dirX, dirY).Normalized();
 		MyUnit.MoveInDirection(moveDirection);
 		

@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/Weapons/Weapon.cs" type="Script" id=1]
+
+[node name="Weapon" type="Sprite"]
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": "The base weapon.
+To create a new weapon, create a copy of this one and give it a new script that inherits Weapon."
+}

@@ -35,5 +35,13 @@ public class Unit : KinematicBody2D
 		return (Unit)targetAcquirer.AcquireTarget(range, this);
 	}
 	
-	// public void ShootWeaponAt(Weapon weaponToUse, Unit targetToShootAt) {}
+	public void ShootWeaponAt(Unit targetToShootAt) {
+		var weaponEquipped = Utils.GetNodeByType<Weapon>(this);
+		if (weaponEquipped == null)
+		{
+			GD.Print($"Unit ${Name} has no weapon equipped. Add as child node a Sprite with a T: Weapon script.");
+			return;
+		}
+		weaponEquipped.Shoot(new Vector2(0, 0), new Vector2(0, 0));
+	}
 }

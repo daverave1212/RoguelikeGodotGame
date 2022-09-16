@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://swordie.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/Weapons/BroadswordWeapon.cs" type="Script" id=2]
+
+[node name="BroadswordWeapon" type="Sprite"]
+position = Vector2( 40.75, 21.6875 )
+scale = Vector2( 1.50781, 2.95833 )
+texture = ExtResource( 1 )
+script = ExtResource( 2 )
