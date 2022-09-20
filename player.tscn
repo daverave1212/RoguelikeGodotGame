@@ -1,7 +1,43 @@
 [gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Ratfolk Mage Sprite Sheet.png" type="Texture" id=1]
-[ext_resource path="res://Player.cs" type="Script" id=2]
+
+[sub_resource type="CSharpScript" id=20]
+script/source = "using Godot;
+
+public class Player : KinematicBody2D
+{
+	[Export]
+	public float Speed { get; set; } = 5f;
+
+	public override void _Ready()
+	{
+
+	}
+
+	public override void _Input(InputEvent @event)
+	{
+		if(@event is InputEventScreenTouch touch)
+			GD.Print(\"touch\");
+	}
+
+	public override void _PhysicsProcess(float delta)
+	{
+		var dirX = Input.GetAxis(\"ui_left\", \"ui_right\");
+		var dirY = Input.GetAxis(\"ui_up\", \"ui_down\");
+		MoveAndSlide(new Vector2(dirX, dirY).Normalized() * 200f);
+		
+		if (Input.IsActionPressed(\"ui_accept\")) {
+			var targetAcquirer = GetNode<TargetAcquirer>(\"TargetAcquirer\");
+			var foundKBody = targetAcquirer.AcquireTarget(exclude: this);
+			if (foundKBody != null)
+				GD.Print(foundKBody.Name);
+		}
+	}
+	
+	
+}
+"
 
 [sub_resource type="RectangleShape2D" id=18]
 extents = Vector2( 4, 1.33333 )
@@ -87,7 +123,8 @@ animations = [ {
 polygon = PoolVector2Array( -5.33333, -2.66667, -5.33333, 0, 2.66667, 0, 2.66667, -2.66667 )
 
 [node name="player" type="KinematicBody2D"]
-script = ExtResource( 2 )
+script = SubResource( 20 )
+Speed = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -1.33333 )
@@ -97,7 +134,7 @@ shape = SubResource( 18 )
 light_mask = 2
 frames = SubResource( 17 )
 animation = "idle"
-frame = 6
+frame = 7
 playing = true
 offset = Vector2( 0, -16 )
 
