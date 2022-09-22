@@ -4,6 +4,5 @@
 [ext_resource path="res://Scripts/UI/TargetFollowingUnit.cs" type="Script" id=2]
 
 [node name="TargetFollowingUnit" type="Sprite"]
-position = Vector2( 186, 110 )
 texture = ExtResource( 1 )
 script = ExtResource( 2 )

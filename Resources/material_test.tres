@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[ext_resource path="res://Resources/shader_test.tres" type="Shader" id=1]
+
+[resource]
+shader = ExtResource( 1 )
+shader_param/Speed = Vector2( 0.3, 0.3 )
+shader_param/Strength = Vector2( 0.3, 0.2 )

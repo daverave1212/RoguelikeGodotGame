@@ -1,0 +1,16 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+code = "shader_type canvas_item;
+
+uniform vec2 Speed = vec2(0.3, 0.3);
+uniform vec2 Strength = vec2(0.3, 0.2);
+
+void fragment()
+{
+	vec2 str = vec2(Strength.x * 20.0, Strength.y * 20.0);
+	vec2 sp = vec2(Speed.x * 2.0, Speed.y * 2.0);
+	float u = UV.x + sin(radians(2000.0 * TIME * sp.x / 10.0 + UV.y * 250.0)) * 0.02 * str.x / 10.0;
+	float v = UV.y + cos(radians(2000.0 * TIME * sp.y / 10.0 + UV.x * 500.0)) * 0.03 * str.y / 10.0;
+	COLOR = texture(TEXTURE, vec2(u, v));
+}"

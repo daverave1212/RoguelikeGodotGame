@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/swordie.png-188a13355b4a4779f79309577e9271fe.stex"
+path="res://.import/swordie.png-98233864a9b8ccbe2f41d89e134560ec.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://swordie.png"
-dest_files=[ "res://.import/swordie.png-188a13355b4a4779f79309577e9271fe.stex" ]
+source_file="res://Images/Weapons/swordie.png"
+dest_files=[ "res://.import/swordie.png-98233864a9b8ccbe2f41d89e134560ec.stex" ]
 
 [params]
 

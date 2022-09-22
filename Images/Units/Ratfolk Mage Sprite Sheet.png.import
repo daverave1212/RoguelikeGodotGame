@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Ratfolk Mage Sprite Sheet.png-cd7d8f71f72855ab4a963efc3db9b5d2.stex"
+path="res://.import/Ratfolk Mage Sprite Sheet.png-c5410cc33dae0ec5daaed2ae7b6ebc5d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Ratfolk Mage Sprite Sheet.png"
-dest_files=[ "res://.import/Ratfolk Mage Sprite Sheet.png-cd7d8f71f72855ab4a963efc3db9b5d2.stex" ]
+source_file="res://Images/Units/Ratfolk Mage Sprite Sheet.png"
+dest_files=[ "res://.import/Ratfolk Mage Sprite Sheet.png-c5410cc33dae0ec5daaed2ae7b6ebc5d.stex" ]
 
 [params]
 

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/TilesGrassExtras.png-f1ebbac95f77f7b667e50f7d39d6241e.stex"
+path="res://.import/icon.png-5c54608cdf98940b04ad240121483c81.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://TilesGrassExtras.png"
-dest_files=[ "res://.import/TilesGrassExtras.png-f1ebbac95f77f7b667e50f7d39d6241e.stex" ]
+source_file="res://Images/icon.png"
+dest_files=[ "res://.import/icon.png-5c54608cdf98940b04ad240121483c81.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=false
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2
