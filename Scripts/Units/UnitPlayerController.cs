@@ -1,54 +1,48 @@
 using Godot;
-using System;
 
 public class UnitPlayerController : Node
 {
-	
+
 	StatsComponent MyStats;
 	Unit MyUnit;
-	
+
 	public override void _Ready()
 	{
 		MyUnit = GetParent<Unit>();
 		MyStats = MyUnit.GetNode<StatsComponent>("StatsComponent");
 	}
 
-	public override void _Input(InputEvent @event)
-	{
-		if(@event is InputEventScreenTouch touch)
-			GD.Print("touch");
-	}
-
 	public override void _PhysicsProcess(float delta)
 	{
 		var dirX = Input.GetAxis("ui_left", "ui_right");
 		var dirY = Input.GetAxis("ui_up", "ui_down");
-		
-		var moveDirection = new Vector2(dirX, dirY).Normalized();
+
+		var moveDirection = MobileJoystick.MoveDirection;//new Vector2(dirX, dirY).Normalized();
 		MyUnit.MoveInDirection(moveDirection);
-		
+
 		// __TestTargetAcquisition();
 		// __TestWeaponShoot();
 		// __TestTargetFollowingUnit();
 		__TestWeaponDatabase();
-		
+
 	}
-	
-	
-	
+
+
+
 	// Test methods; should remove these later
 	public void __TestTargetAcquisition()
 	{
-		if (Input.IsActionPressed("ui_accept")) {
+		if(Input.IsActionPressed("ui_accept"))
+		{
 			var targetAcquirer = GetNode<TargetAcquirer>("TargetAcquirer");
 			var foundKBody = targetAcquirer.AcquireTarget(exclude: MyUnit);
-			if (foundKBody != null)
+			if(foundKBody != null)
 				GD.Print(foundKBody.Name);
 		}
 	}
 	public void __TestWeaponShoot()
 	{
-		if (Input.IsActionPressed("ui_accept"))
+		if(Input.IsActionPressed("ui_accept"))
 		{
 			MyUnit.ShootWeaponAt(null);
 		}
@@ -56,15 +50,15 @@ public class UnitPlayerController : Node
 	bool IsFollowing = false;
 	public void __TestTargetFollowingUnit()
 	{
-		if (Input.IsActionPressed("ui_accept"))
+		if(Input.IsActionPressed("ui_accept"))
 		{
 			var ySortNode = MyUnit.GetParent();
 			var scene = ySortNode.GetParent();
 			var targetFollowingUnit = scene.GetNode<TargetFollowingUnit>("TargetFollowingUnit");
-		
+
 			IsFollowing = !IsFollowing;
-			
-			if (IsFollowing == false)
+
+			if(IsFollowing == false)
 			{
 				targetFollowingUnit.ObjectItIsFollowing = null;
 				return;
@@ -77,12 +71,12 @@ public class UnitPlayerController : Node
 	}
 	public void __TestWeaponDatabase()
 	{
-		if (Input.IsActionPressed("ui_accept"))
+		if(Input.IsActionPressed("ui_accept"))
 		{
 			var weaponNode = WeaponsDatabase.Create("Broadsword");
 			GD.Print(weaponNode.Name);
 			// weaponNode.GlobalPosition = MyUnit.GlobalPosition;
-			weaponNode.Position = new Vector2(0,0);
+			weaponNode.Position = new Vector2(0, 0);
 			GD.Print(MyUnit.GlobalPosition);
 			GD.Print(weaponNode.GlobalPosition);
 			GD.Print(weaponNode.Position);
@@ -90,7 +84,7 @@ public class UnitPlayerController : Node
 			MyUnit.AddChild(weaponNode);
 			GD.Print("Hmm");
 		}
-		
+
 	}
-	
+
 }

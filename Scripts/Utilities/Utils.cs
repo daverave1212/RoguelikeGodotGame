@@ -408,8 +408,7 @@ public static class Utils
 		return l && u;
 	}
 	/// <summary>
-	/// Moves a <paramref name="number"/> in the direction of <paramref name="speed"/>. May be <paramref name="fpsDependent"/>
-	/// (see <see cref="Time.Delta"/> for info). The result is then returned.
+	/// Moves a <paramref name="number"/> in the direction of <paramref name="speed"/>. The result is then returned.
 	/// </summary>
 	public static float Move(this float number, float speed, float dt = 1)
 	{
@@ -417,8 +416,7 @@ public static class Utils
 		return number + speed;
 	}
 	/// <summary>
-	/// Moves a <paramref name="number"/> toward a <paramref name="targetNumber"/> with <paramref name="speed"/>. May be
-	/// <paramref name="fpsDependent"/> (see <see cref="Time.Delta"/> for info).
+	/// Moves a <paramref name="number"/> toward a <paramref name="targetNumber"/> with <paramref name="speed"/>.
 	/// The calculation ensures not to pass the <paramref name="targetNumber"/>. The result is then returned.
 	/// </summary>
 	public static float MoveToTarget(this float number, float targetNumber, float speed, float dt = 1)
@@ -447,7 +445,7 @@ public static class Utils
 	}
 	/// <summary>
 	/// Rotates a 360 degrees <paramref name="angle"/> toward a <paramref name="targetAngle"/> with <paramref name="speed"/>
-	/// taking the closest direction. May be <paramref name="fpsDependent"/> (see <see cref="Time.Delta"/> for info).
+	/// taking the closest direction.
 	/// The calculation ensures not to pass the <paramref name="targetAngle"/>. The result is then returned.
 	/// </summary>
 	public static float MoveToAngle(this float angle, float targetAngle, float speed, float dt = 1)
@@ -625,8 +623,7 @@ public static class Utils
 		return normalized ? (targetPoint - point).Normalized() : targetPoint - point;
 	}
 	/// <summary>
-	/// Moves a <paramref name="point"/> in <paramref name="direction"/> with <paramref name="speed"/>. May be <paramref name="fpsDependent"/>
-	/// (see <see cref="Time.Delta"/> for info). The result is then returned.
+	/// Moves a <paramref name="point"/> in <paramref name="direction"/> with <paramref name="speed"/>. The result is then returned.
 	/// </summary>
 	public static Vector2 MoveInDirection(this Vector2 point, Vector2 direction, float speed, float dt = 1)
 	{
@@ -635,8 +632,7 @@ public static class Utils
 		return new Vector2(point.x, point.y);
 	}
 	/// <summary>
-	/// Moves a <paramref name="point"/> at a 360 degrees <paramref name="angle"/> with <paramref name="speed"/>. May be
-	/// <paramref name="fpsDependent"/> (see <see cref="Time.Delta"/> for info). The result is then returned.
+	/// Moves a <paramref name="point"/> at a 360 degrees <paramref name="angle"/> with <paramref name="speed"/>. The result is then returned.
 	/// </summary>
 	public static Vector2 MoveAtAngle(this Vector2 point, float angle, float speed, float dt = 1)
 	{
@@ -644,8 +640,7 @@ public static class Utils
 		return result;
 	}
 	/// <summary>
-	/// Moves a <paramref name="point"/> toward <paramref name="targetPoint"/> with <paramref name="speed"/>. May be
-	/// <paramref name="fpsDependent"/> (see <see cref="Time.Delta"/> for info). The calculation ensures not to pass the
+	/// Moves a <paramref name="point"/> toward <paramref name="targetPoint"/> with <paramref name="speed"/>. The calculation ensures not to pass the
 	/// <paramref name="targetPoint"/>. The result is then returned.
 	/// </summary>
 	public static Vector2 MoveToTarget(this Vector2 point, Vector2 targetPoint, float speed, float dt = 1)
