@@ -21,9 +21,9 @@ public class UnitPlayerController : Node
 		MyUnit.MoveInDirection(moveDirection);
 
 		// __TestTargetAcquisition();
-		// __TestWeaponShoot();
+		__TestWeaponShoot();
 		// __TestTargetFollowingUnit();
-		__TestWeaponDatabase();
+		// __TestWeaponDatabase();
 
 	}
 

@@ -15,6 +15,18 @@ public class Unit : KinematicBody2D
 	
 	
 	// --------- API ----------
+	public OwnerTag GetOwnerTag() {
+		if (IsPlayerUnit()) return OwnerTag.Player;
+		return OwnerTag.Enemy;
+	}
+	public bool IsPlayerUnit()
+	{
+		return HasNode("UnitPlayerController");
+	}
+	public bool IsEnemyUnit()
+	{
+		return HasNode("UnitAIController");
+	}
 	
 	/// <summary>
 	/// Moves 1 Frame in the given direction.
@@ -42,6 +54,6 @@ public class Unit : KinematicBody2D
 			GD.Print($"Unit ${Name} has no weapon equipped. Add as child node a Sprite with a T: Weapon script.");
 			return;
 		}
-		weaponEquipped.Shoot(new Vector2(0, 0), new Vector2(0, 0));
+		weaponEquipped.Shoot(GlobalPosition, new Vector2(0, 0));
 	}
 }

@@ -735,6 +735,14 @@ public static class Utils
 	/// </summary>
 	public static int Map(this int number, int a1, int a2, int b1, int b2)
 		=> (int)Map((float)number, a1, a2, b1, b2);
+		
+	public static Node SpawnNodeOn(Node parentNode, string nodePath)
+	{
+		var nodeType = GD.Load<PackedScene>(nodePath);
+		var newNode = nodeType.Instance();
+		parentNode.AddChild(newNode);
+		return newNode;
+	}
 
 	#region Backend
 	private static readonly Dictionary<string, int> gateEntries = new Dictionary<string, int>();
