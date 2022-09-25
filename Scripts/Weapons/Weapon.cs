@@ -12,7 +12,7 @@ public abstract class Weapon : Sprite
 	/// bulletOwner should be OwnerTag.Player or OwnerTag.Enemy (or even OwnerTag.Nobody).
 	/// If you give it the Player tag, it will only seek Enemies (and viceversa).
 	/// </summary>
-	public Bullet SpawnBullet(OwnerTag bulletOwner, Vector2 atPos, Vector2 direction, float bulletSpeed = -1)
+	public Bullet SpawnBullet(OwnerTag bulletOwner, Vector2 atPos, Vector2 direction, float bulletSpeed = 1.2f)
 	{
 		return SpawnBullet(bulletOwner, atPos, Utils.ToAngle(direction.Normalized()), bulletSpeed);
 	}
