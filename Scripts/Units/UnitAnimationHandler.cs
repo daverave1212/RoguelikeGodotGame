@@ -21,18 +21,18 @@ public class UnitAnimationHandler : Node
 		var deltaY = myPositionNow.y - PreviousFramePosition.y;
 
 		var didMove = deltaX != 0 || deltaY != 0;
-		var movedLeft = deltaX < 0;
 
 		var animatedSprite = UnitParent.GetNode<AnimatedSprite>("AnimatedSprite");
 
-		if(didMove)
+		if(InputHandler.MoveDirection.x < 0)
+			animatedSprite.FlipH = true;
+		else if(InputHandler.MoveDirection.x > 0)
+			animatedSprite.FlipH = false;
+
+		if(didMove && CurrentAnimationState == AnimationStates.Idle)
 		{
-			if(CurrentAnimationState == AnimationStates.Idle)
-			{
-				CurrentAnimationState = AnimationStates.Walking;
-				animatedSprite.Play("Walk");
-			}
-			animatedSprite.FlipH = movedLeft;
+			CurrentAnimationState = AnimationStates.Walking;
+			animatedSprite.Play("Walk");
 		}
 
 		if(didMove == false && CurrentAnimationState == AnimationStates.Walking)

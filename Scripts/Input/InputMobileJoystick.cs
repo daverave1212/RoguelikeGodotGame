@@ -1,28 +1,37 @@
 using Godot;
 
-public class MobileJoystick : Sprite
+public class InputMobileJoystick : InputHandler
 {
+	private Sprite joystick;
 	private Node2D handle;
 	private bool isHeld;
-
-	public static Vector2 MoveDirection;
+	private bool isVisible = true;
 
 	public override void _Ready()
 	{
-		handle = (Node2D)GetChild(0);
+		joystick = GetNode<Sprite>("/root/World/YSort/RatPlayer/Camera2D/Joystick");
+		handle = (Node2D)joystick.GetChild(0);
 	}
 
 	public override void _Input(InputEvent @event)
 	{
 		if(@event is InputEventScreenTouch touch)
+		{
+			isVisible = true;
 			isHeld = touch.Pressed;
+		}
 	}
 
 	public override void _Process(float delta)
 	{
-		var mousePos = GetGlobalMousePosition();
-		var radius = Texture.GetWidth() / 2f * GlobalScale.x;
-		var dist = mousePos.DistanceTo(GlobalPosition);
+		joystick.Visible = isVisible;
+
+		if(isVisible == false)
+			return;
+
+		var mousePos = joystick.GetGlobalMousePosition();
+		var radius = joystick.Texture.GetWidth() / 2f * joystick.GlobalScale.x;
+		var dist = mousePos.DistanceTo(joystick.GlobalPosition);
 		var lmb = Input.IsMouseButtonPressed((int)ButtonList.Left);
 
 		if(lmb.Once("left-press-ui-joystick") && dist < radius)
@@ -37,11 +46,11 @@ public class MobileJoystick : Sprite
 			return;
 		}
 
-		var dir = GlobalPosition.DirectionBetweenPoints(mousePos);
+		var dir = joystick.GlobalPosition.Direction(mousePos);
 		var maxDist = Mathf.Min(dist, radius);
-		var handlePos = GlobalPosition.MoveInDirection(dir, maxDist);
+		var handlePos = joystick.GlobalPosition.MoveInDirection(dir, maxDist);
 
 		handle.GlobalPosition = handlePos;
-		MoveDirection = dir;
+		MoveDirection = dir.Normalized();
 	}
 }

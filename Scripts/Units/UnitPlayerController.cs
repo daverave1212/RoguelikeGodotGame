@@ -2,7 +2,6 @@ using Godot;
 
 public class UnitPlayerController : Node
 {
-
 	StatsComponent MyStats;
 	Unit MyUnit;
 
@@ -14,10 +13,7 @@ public class UnitPlayerController : Node
 
 	public override void _PhysicsProcess(float delta)
 	{
-		var dirX = Input.GetAxis("ui_left", "ui_right");
-		var dirY = Input.GetAxis("ui_up", "ui_down");
-
-		var moveDirection = MobileJoystick.MoveDirection;//new Vector2(dirX, dirY).Normalized();
+		var moveDirection = InputHandler.MoveDirection;
 		MyUnit.MoveInDirection(moveDirection);
 
 		// __TestTargetAcquisition();
@@ -32,9 +28,9 @@ public class UnitPlayerController : Node
 	// Test methods; should remove these later
 	public void __TestTargetAcquisition()
 	{
-		if(Input.IsActionPressed("ui_accept"))
+		if(Input.IsActionPressed("ui_accept").Once("target-key"))
 		{
-			var targetAcquirer = GetNode<TargetAcquirer>("TargetAcquirer");
+			var targetAcquirer = GetNode<TargetAcquirer>("Acquirer");
 			var foundKBody = targetAcquirer.AcquireTarget(exclude: MyUnit);
 			if(foundKBody != null)
 				GD.Print(foundKBody.Name);
@@ -42,7 +38,7 @@ public class UnitPlayerController : Node
 	}
 	public void __TestWeaponShoot()
 	{
-		if(Input.IsActionPressed("ui_accept"))
+		if(Input.IsActionPressed("ui_accept").Once("shoot-key"))
 		{
 			MyUnit.ShootWeaponAt(null);
 		}

@@ -618,7 +618,7 @@ public static class Utils
 	/// Calculates the direction between <paramref name="point"/> and <paramref name="targetPoint"/>. The result may be
 	/// <paramref name="normalized"/> (see <see cref="Normalize"/> for info). Then it is returned.
 	/// </summary>
-	public static Vector2 DirectionBetweenPoints(this Vector2 point, Vector2 targetPoint, bool normalized = true)
+	public static Vector2 Direction(this Vector2 point, Vector2 targetPoint, bool normalized = true)
 	{
 		return normalized ? (targetPoint - point).Normalized() : targetPoint - point;
 	}
@@ -735,7 +735,13 @@ public static class Utils
 	/// </summary>
 	public static int Map(this int number, int a1, int a2, int b1, int b2)
 		=> (int)Map((float)number, a1, a2, b1, b2);
-		
+
+	/// <summary>
+	/// Spawns a <see cref="Node"/> with a certain <paramref name="nodePath"/> as a child of a <paramref name="parentNode"/>.
+	/// </summary>
+	/// <param name="parentNode"></param>
+	/// <param name="nodePath"></param>
+	/// <returns></returns>
 	public static Node SpawnNodeOn(Node parentNode, string nodePath)
 	{
 		var nodeType = GD.Load<PackedScene>(nodePath);
