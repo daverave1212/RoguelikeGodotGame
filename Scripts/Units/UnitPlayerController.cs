@@ -4,11 +4,15 @@ public class UnitPlayerController : Node
 {
 	StatsComponent MyStats;
 	Unit MyUnit;
+	
+	Unit CurrentTargetUnit;
 
 	public override void _Ready()
 	{
 		MyUnit = GetParent<Unit>();
 		MyStats = MyUnit.GetNode<StatsComponent>("StatsComponent");
+		
+		Delay.DoEvery(0.25f, TryAcquireTarget);
 	}
 
 	public override void _PhysicsProcess(float delta)
@@ -17,12 +21,30 @@ public class UnitPlayerController : Node
 		MyUnit.MoveInDirection(moveDirection);
 
 		// __TestTargetAcquisition();
-		__TestWeaponShoot();
+		// __TestWeaponShoot();
 		// __TestTargetFollowingUnit();
 		// __TestWeaponDatabase();
 
 	}
 
+
+	/// <summary> Tries to get a new target unit and moves the visual target over that unit </summary>
+	void TryAcquireTarget()
+	{
+		var scene = GetNode(World.WorldNodePath);
+		var nodeTarget = scene.GetNode<TargetFollowingUnit>("TargetFollowingUnit");
+		var unitAcquired = MyUnit.AcquireTarget(75);
+		
+		if (unitAcquired == null)
+		{
+			nodeTarget.ObjectItIsFollowing = null;
+			return;
+		}
+		if (unitAcquired != CurrentTargetUnit)
+		{
+			nodeTarget.ObjectItIsFollowing = unitAcquired;
+		}
+	}
 
 
 	// Test methods; should remove these later

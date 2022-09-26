@@ -17,6 +17,10 @@
 
 [node name="World" type="Node"]
 script = ExtResource( 5 )
+__meta__ = {
+"_editor_description_": "Do NOT rename this node.
+The name of the World node is used throughout the project."
+}
 
 [node name="SINGLETONS" type="Node" parent="."]
 

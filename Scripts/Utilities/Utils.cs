@@ -740,13 +740,25 @@ public static class Utils
 	/// Spawns a <see cref="Node"/> with a certain <paramref name="nodePath"/> as a child of a <paramref name="parentNode"/>.
 	/// </summary>
 	/// <param name="parentNode"></param>
-	/// <param name="nodePath"></param>
+	/// <param name="nodePath">The path to the "prefab" (.tscn file).</param>
 	/// <returns></returns>
 	public static Node SpawnNodeOn(Node parentNode, string nodePath)
 	{
 		var nodeType = GD.Load<PackedScene>(nodePath);
 		var newNode = nodeType.Instance();
 		parentNode.AddChild(newNode);
+		return newNode;
+	}
+	/// <summary>
+	/// Spawns a <see cref="Node"/> with a certain <paramref name="nodePath"/>, but NOT as a child to anything.
+	/// The spawned <see cref="Node"/> must be MANUALLY attached to something to see it in the scene.
+	/// </summary>
+	/// <param name="nodePath">The path to the "prefab" (.tscn file).</param>
+	/// <returns></returns>
+	public static Node SpawnNode(string nodePath)
+	{
+		var nodeType = GD.Load<PackedScene>(nodePath);
+		var newNode = nodeType.Instance();
 		return newNode;
 	}
 

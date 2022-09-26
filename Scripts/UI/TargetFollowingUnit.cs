@@ -1,10 +1,14 @@
 using Godot;
 
+/// <summary>
+/// Simply set its ObjectItIsFollowing to something valid to show it.
+/// Set it to null to hide the target.
+/// </summary>
 public class TargetFollowingUnit : Sprite
 {
 	public Node2D ObjectItIsFollowing;
 	[Export] public float FollowSpeed = 5f;
-	[Export] public float YOffsetOnTarget = 10f;
+	[Export] public float YOffsetOnTarget = -10f;
 
 	public override void _PhysicsProcess(float deltaTime)
 	{
@@ -37,8 +41,7 @@ public class TargetFollowingUnit : Sprite
 		var yIncrement = FollowSpeed * distanceToObjectByY * deltaTime;
 
 		var positionIncrement = new Vector2(xIncrement, yIncrement);
-		if(positionIncrement.x != 0 && positionIncrement.y != 0)
-			GD.Print(positionIncrement);
+		
 		GlobalPosition += positionIncrement;
 
 	}

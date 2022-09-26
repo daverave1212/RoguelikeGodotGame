@@ -22,17 +22,18 @@ public class TargetAcquirer : Area2D
 	/// </summary>
 	public KinematicBody2D AcquireTarget(float range, KinematicBody2D exclude = null)
 	{
-		var nodesInRange = GetOverlappingBodies();
-		if (exclude != null && nodesInRange.Count == 1)
-			return null; // If exclude is the only found node
-		
 		CollisionShape2D colShape = GetNode<CollisionShape2D>("CollisionShape2D");
 		CircleShape2D myCircleShape = (CircleShape2D)colShape.Shape;
 		var radiusBackup = myCircleShape.Radius;
 		myCircleShape.Radius = range;
-		var myRadius = range;
-		var closestDistanceFound = Math.Pow(myRadius, 2);	// To avoid using SQRT, I calculate distances at power of 2
-		var closestNodeFound = exclude;
+		
+		var nodesInRange = GetOverlappingBodies();
+		
+		if (exclude != null && nodesInRange.Count == 1)
+			return null; // If exclude is the only found node
+	
+		var closestDistanceFound = Math.Pow(range, 2);	// To avoid using SQRT, I calculate distances at power of 2
+		KinematicBody2D closestNodeFound = null;
 		
 		foreach (KinematicBody2D node in nodesInRange)
 		{
