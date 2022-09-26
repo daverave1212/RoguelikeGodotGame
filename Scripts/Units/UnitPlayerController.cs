@@ -13,6 +13,7 @@ public class UnitPlayerController : Node
 		MyStats = MyUnit.GetNode<StatsComponent>("StatsComponent");
 		
 		Delay.DoEvery(0.25f, TryAcquireTarget);
+		Delay.DoEvery(0.1f, () => TryShootCurrentTarget(0.1f));
 	}
 
 	public override void _PhysicsProcess(float delta)
@@ -33,18 +34,50 @@ public class UnitPlayerController : Node
 	{
 		var scene = GetNode(World.WorldNodePath);
 		var nodeTarget = scene.GetNode<TargetFollowingUnit>("TargetFollowingUnit");
-		var unitAcquired = MyUnit.AcquireTarget(75);
+		var previousTargetUnit = CurrentTargetUnit;
+		CurrentTargetUnit = MyUnit.AcquireTarget(75);
 		
-		if (unitAcquired == null)
+		if (CurrentTargetUnit == null)
 		{
 			nodeTarget.ObjectItIsFollowing = null;
 			return;
 		}
-		if (unitAcquired != CurrentTargetUnit)
+		if (CurrentTargetUnit != previousTargetUnit)
 		{
-			nodeTarget.ObjectItIsFollowing = unitAcquired;
+			nodeTarget.ObjectItIsFollowing = CurrentTargetUnit;
 		}
 	}
+	
+	float timeSinceLastAttack = 0f;
+	void TryShootCurrentTarget(float deltaTime)
+	{
+		timeSinceLastAttack += deltaTime;
+		
+		var weapon = MyUnit.GetEquippedWeapon();
+		
+		if (weapon == null)
+			return;
+		if (CurrentTargetUnit == null)
+			return;
+		if (MyUnit.IsMoving())
+			return;
+		if (timeSinceLastAttack < weapon.AttackCooldownSeconds)
+			return;		// If attack not yet ready, return
+		
+		// Else, if the attack is ready to shoot...
+		MyUnit.ShootWeaponAt(CurrentTargetUnit);
+		timeSinceLastAttack = 0f;
+		
+	}
+
+
+
+
+
+
+
+
+
 
 
 	// Test methods; should remove these later

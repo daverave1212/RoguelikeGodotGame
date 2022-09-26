@@ -6,6 +6,9 @@ using System;
 /// </summary>
 public abstract class Weapon : Sprite
 {
+	
+	[Export] public float AttackCooldownSeconds = 1f;
+	
 	public abstract void Shoot(Vector2 fromPos, Vector2 toPos);
 
 	/// <summary>
@@ -13,9 +16,9 @@ public abstract class Weapon : Sprite
 	/// bulletOwner should be OwnerTag.Player or OwnerTag.Enemy (or even OwnerTag.Nobody).
 	/// If you give it the Player tag, it will only seek Enemies (and viceversa).
 	/// </summary>
-	public Bullet SpawnBullet(string bulletName, Vector2 atPos, Vector2 direction, Action<Unit> onHit)
+	public Bullet SpawnBullet(string bulletName, Vector2 atPos, Vector2 toPos, Action<Unit> onHit)
 	{
-		return SpawnBullet(bulletName, atPos, Utils.ToAngle(direction.Normalized()), onHit);
+		return SpawnBullet(bulletName, atPos, Utils.Angle(atPos, toPos), onHit);
 	}
 	/// <summary> Variant parameters for the same function </summary>
 	public Bullet SpawnBullet(string bulletName, Vector2 atPos, float angleDegrees, Action<Unit> onHit)

@@ -4,9 +4,18 @@ using System;
 public class Unit : KinematicBody2D
 {
 	StatsComponent MyStats;
+	Vector2 PreviousFramePosition;
+	Vector2 CurrentFramePosition;
 	
 	public override void _Ready() {
 		MyStats = GetNode<StatsComponent>("StatsComponent");
+		CurrentFramePosition = GlobalPosition;
+		PreviousFramePosition = GlobalPosition;
+	}
+	public override void _PhysicsProcess(float deltaTime)
+	{
+		PreviousFramePosition = CurrentFramePosition;
+		CurrentFramePosition = GlobalPosition;
 	}
 	
 	
@@ -37,7 +46,14 @@ public class Unit : KinematicBody2D
 	public void MoveInDirection(Vector2 direction) {
 		MoveAndSlide(direction.Normalized() * MyStats.Speed);
 	}
-	
+	public bool IsNotMoving() 
+	{
+		return (PreviousFramePosition.x == CurrentFramePosition.x && PreviousFramePosition.y == CurrentFramePosition.y);
+	}
+	public bool IsMoving()
+	{
+		return ! IsNotMoving();
+	}
 	/// <summary>
 	/// Returns the closest Unit within range of me.
 	/// This should be used inside a _Process function.
@@ -46,14 +62,22 @@ public class Unit : KinematicBody2D
 		TargetAcquirer targetAcquirer = GetNode<TargetAcquirer>("TargetAcquirer");
 		return (Unit)targetAcquirer.AcquireTarget(range, this);
 	}
-	
 	public void ShootWeaponAt(Unit targetToShootAt) {
 		var weaponEquipped = Utils.GetNodeByType<Weapon>(this);
+		if (targetToShootAt == null)
+		{
+			GD.Print($"Unit ${Name} can't shoot a null targetToShootAt, silly!");
+			return;
+		}
 		if (weaponEquipped == null)
 		{
 			GD.Print($"Unit ${Name} has no weapon equipped. Add as child node a Sprite with a T: Weapon script.");
 			return;
 		}
-		weaponEquipped.Shoot(GlobalPosition, new Vector2(0, 0));
+		weaponEquipped.Shoot(GlobalPosition, targetToShootAt.GlobalPosition);
+	}
+	public Weapon GetEquippedWeapon()
+	{
+		return Utils.GetNodeByType<Weapon>(this);
 	}
 }

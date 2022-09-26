@@ -111,7 +111,7 @@ shape = SubResource( 3 )
 light_mask = 2
 frames = SubResource( 20 )
 animation = "Idle"
-frame = 5
+frame = 1
 playing = true
 offset = Vector2( 0, -16 )
 

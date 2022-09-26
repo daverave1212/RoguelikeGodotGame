@@ -28,13 +28,11 @@ public class Bullet : Area2D
 
 		if(hasCollidedWithTerrain)
 		{
-			GD.Print("WITH TERRAIN");
 			QueueFree();
 			return;
 		}
 
 		var unit = (Unit)nodeItCollidedWith;
-		GD.Print($"WITH UNIT; owner == {unit.GetOwnerTag()}");
 		if(unit.GetOwnerTag() == BulletOwner)
 			return;
 	

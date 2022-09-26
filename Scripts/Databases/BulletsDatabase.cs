@@ -17,6 +17,7 @@ public class BulletsDatabase
 	
 		var bullet = (Bullet) Utils.SpawnNode(bulletPath);
 		
+		GD.Print($"  Set bullet angle to {angle}");
 		bullet.GlobalPosition = position;
 		bullet.RotationDegrees = angle;
 		bullet.OnHit = onHit;
