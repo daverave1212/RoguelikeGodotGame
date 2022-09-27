@@ -7,6 +7,7 @@ public class InputKeyboardMouse : InputHandler
 		var dirX = Input.GetAxis("ui_left", "ui_right");
 		var dirY = Input.GetAxis("ui_up", "ui_down");
 
-		MoveDirection = new Vector2(dirX, dirY).Normalized();
+		if(InputMobileJoystick.IsVisible == false)
+			MoveDirection = new Vector2(dirX, dirY).Normalized();
 	}
 }

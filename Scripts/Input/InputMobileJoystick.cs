@@ -5,7 +5,8 @@ public class InputMobileJoystick : InputHandler
 	private Sprite joystick;
 	private Node2D handle;
 	private bool isHeld;
-	private bool isVisible = true;
+
+	public static bool IsVisible { get; private set; }
 
 	public override void _Ready()
 	{
@@ -17,16 +18,16 @@ public class InputMobileJoystick : InputHandler
 	{
 		if(@event is InputEventScreenTouch touch)
 		{
-			isVisible = true;
+			IsVisible = true;
 			isHeld = touch.Pressed;
 		}
 	}
 
 	public override void _Process(float delta)
 	{
-		joystick.Visible = isVisible;
+		joystick.Visible = IsVisible;
 
-		if(isVisible == false)
+		if(IsVisible == false)
 			return;
 
 		var mousePos = joystick.GetGlobalMousePosition();

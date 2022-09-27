@@ -4,16 +4,16 @@ public class UnitPlayerController : Node
 {
 	StatsComponent MyStats;
 	Unit MyUnit;
-	
+
 	Unit CurrentTargetUnit;
 
 	public override void _Ready()
 	{
 		MyUnit = GetParent<Unit>();
 		MyStats = MyUnit.GetNode<StatsComponent>("StatsComponent");
-		
-		Delay.DoEvery(0.25f, TryAcquireTarget);
-		Delay.DoEvery(0.1f, () => TryShootCurrentTarget(0.1f));
+
+		var timer = Delay.DoEvery(0.25f, TryAcquireTarget);
+		var timer2 = Delay.DoEvery(0.1f, () => TryShootCurrentTarget(0.1f));
 	}
 
 	public override void _PhysicsProcess(float delta)
@@ -36,38 +36,38 @@ public class UnitPlayerController : Node
 		var nodeTarget = scene.GetNode<TargetFollowingUnit>("TargetFollowingUnit");
 		var previousTargetUnit = CurrentTargetUnit;
 		CurrentTargetUnit = MyUnit.AcquireTarget(75);
-		
-		if (CurrentTargetUnit == null)
+
+		if(CurrentTargetUnit == null)
 		{
 			nodeTarget.ObjectItIsFollowing = null;
 			return;
 		}
-		if (CurrentTargetUnit != previousTargetUnit)
+		if(CurrentTargetUnit != previousTargetUnit)
 		{
 			nodeTarget.ObjectItIsFollowing = CurrentTargetUnit;
 		}
 	}
-	
+
 	float timeSinceLastAttack = 0f;
 	void TryShootCurrentTarget(float deltaTime)
 	{
 		timeSinceLastAttack += deltaTime;
-		
+
 		var weapon = MyUnit.GetEquippedWeapon();
-		
-		if (weapon == null)
+
+		if(weapon == null)
 			return;
-		if (CurrentTargetUnit == null)
+		if(CurrentTargetUnit == null)
 			return;
-		if (MyUnit.IsMoving())
+		if(MyUnit.IsMoving())
 			return;
-		if (timeSinceLastAttack < weapon.AttackCooldownSeconds)
-			return;		// If attack not yet ready, return
-		
+		if(timeSinceLastAttack < weapon.AttackCooldownSeconds)
+			return;     // If attack not yet ready, return
+
 		// Else, if the attack is ready to shoot...
 		MyUnit.ShootWeaponAt(CurrentTargetUnit);
 		timeSinceLastAttack = 0f;
-		
+
 	}
 
 

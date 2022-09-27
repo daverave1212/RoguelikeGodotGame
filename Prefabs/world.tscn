@@ -70,6 +70,7 @@ position = Vector2( 160, 176 )
 [node name="BroadswordWeapon" parent="YSort/RatPlayer" instance=ExtResource( 16 )]
 position = Vector2( 1, -4.99999 )
 scale = Vector2( 0.476561, 0.624998 )
+AttackCooldownSeconds = 1.0
 
 [node name="Camera2D" type="Camera2D" parent="YSort/RatPlayer"]
 z_index = 999
@@ -84,13 +85,6 @@ texture = ExtResource( 12 )
 [node name="Handle" type="Sprite" parent="YSort/RatPlayer/Camera2D/Joystick"]
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 13 )
-
-[node name="Button" type="Button" parent="YSort/RatPlayer/Camera2D"]
-margin_left = -151.0
-margin_top = -10.0
-margin_right = -114.0
-margin_bottom = 10.0
-text = "ui test"
 
 [node name="RatAI" parent="YSort" instance=ExtResource( 4 )]
 position = Vector2( 222, 151 )
