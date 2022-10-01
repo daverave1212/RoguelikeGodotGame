@@ -78,7 +78,8 @@ current = true
 zoom = Vector2( 0.3, 0.3 )
 
 [node name="Joystick" type="Sprite" parent="YSort/RatPlayer/Camera2D"]
-position = Vector2( -112, 48 )
+modulate = Color( 1, 1, 1, 0.470588 )
+position = Vector2( -112, -176 )
 scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 12 )
 

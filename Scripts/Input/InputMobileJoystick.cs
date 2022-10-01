@@ -4,9 +4,9 @@ public class InputMobileJoystick : InputHandler
 {
 	private Sprite joystick;
 	private Node2D handle;
-	private bool isHeld;
+	private static bool isHeld;
 
-	public static bool IsVisible { get; private set; }
+	public static bool IsHeld => isHeld;
 
 	public override void _Ready()
 	{
@@ -16,30 +16,25 @@ public class InputMobileJoystick : InputHandler
 
 	public override void _Input(InputEvent @event)
 	{
-		if(@event is InputEventScreenTouch touch)
-		{
-			IsVisible = true;
-			isHeld = touch.Pressed;
-		}
+		if(@event is InputEventMouseButton)
+			joystick.GlobalPosition = joystick.GetGlobalMousePosition();
+		else if(@event is InputEventScreenTouch e)
+			joystick.GlobalPosition = joystick.ToGlobal(e.Position);
 	}
 
 	public override void _Process(float delta)
 	{
-		joystick.Visible = IsVisible;
-
-		if(IsVisible == false)
-			return;
-
 		var mousePos = joystick.GetGlobalMousePosition();
 		var radius = joystick.Texture.GetWidth() / 2f * joystick.GlobalScale.x;
 		var dist = mousePos.DistanceTo(joystick.GlobalPosition);
 		var lmb = Input.IsMouseButtonPressed((int)ButtonList.Left);
 
-		if(lmb.Once("left-press-ui-joystick") && dist < radius)
+		if((lmb && dist > radius * 0.05f).Once("started-dragging"))
 			isHeld = true;
-		if((lmb == false).Once("left-release-ui-joystick"))
+		if((lmb == false).Once("lmb-release"))
 			isHeld = false;
 
+		joystick.Visible = isHeld;
 		if(isHeld == false)
 		{
 			handle.Position = Vector2.Zero;
