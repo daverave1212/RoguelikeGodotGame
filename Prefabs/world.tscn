@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Prefabs/Units/UnitOptionalCustomComponents/UnitPlayerController.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Prefabs/UI/TargetFollowingUnit.tscn" type="PackedScene" id=2]
@@ -8,11 +8,10 @@
 [ext_resource path="res://Scripts/Terrain/TileManager.cs" type="Script" id=6]
 [ext_resource path="res://Scripts/Utilities/Delay.cs" type="Script" id=7]
 [ext_resource path="res://Resources/ground_tileset.tres" type="TileSet" id=8]
-[ext_resource path="res://Scripts/Input/InputHandler.cs" type="Script" id=9]
-[ext_resource path="res://Scripts/Input/InputKeyboardMouse.cs" type="Script" id=10]
+[ext_resource path="res://Images/icon.png" type="Texture" id=11]
 [ext_resource path="res://Images/UI/AllAxis_Outline.png" type="Texture" id=12]
 [ext_resource path="res://Images/UI/AllAxis_Plain.png" type="Texture" id=13]
-[ext_resource path="res://Scripts/Input/InputMobileJoystick.cs" type="Script" id=14]
+[ext_resource path="res://Scripts/InputHandler.cs" type="Script" id=14]
 [ext_resource path="res://Prefabs/Weapons/WeaponPrefabs/BroadswordWeapon.tscn" type="PackedScene" id=16]
 
 [node name="World" type="Node"]
@@ -31,13 +30,7 @@ script = ExtResource( 7 )
 script = ExtResource( 6 )
 
 [node name="InputHandler" type="Node" parent="SINGLETONS"]
-script = ExtResource( 9 )
-
-[node name="InputMobileJoystick" type="Node" parent="SINGLETONS/InputHandler"]
 script = ExtResource( 14 )
-
-[node name="InputKeyboardMouse" type="Node" parent="SINGLETONS/InputHandler"]
-script = ExtResource( 10 )
 
 [node name="ground" type="TileMap" parent="."]
 z_index = -2
@@ -75,7 +68,7 @@ AttackCooldownSeconds = 1.0
 [node name="Camera2D" type="Camera2D" parent="YSort/RatPlayer"]
 z_index = 999
 current = true
-zoom = Vector2( 0.3, 0.3 )
+zoom = Vector2( 0.2, 0.2 )
 
 [node name="Joystick" type="Sprite" parent="YSort/RatPlayer/Camera2D"]
 modulate = Color( 1, 1, 1, 0.470588 )
@@ -91,3 +84,7 @@ texture = ExtResource( 13 )
 position = Vector2( 222, 151 )
 
 [node name="UnitAIController" parent="YSort/RatAI" instance=ExtResource( 3 )]
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 272, 163 )
+texture = ExtResource( 11 )

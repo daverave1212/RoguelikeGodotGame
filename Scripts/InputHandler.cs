@@ -1,12 +1,13 @@
 using Godot;
 
-public class InputMobileJoystick : InputHandler
+public class InputHandler : Node
 {
 	private Sprite joystick;
 	private Node2D handle;
 	private static bool isHeld;
 
 	public static bool IsHeld => isHeld;
+	public static Vector2 MoveDirection { get; protected set; }
 
 	public override void _Ready()
 	{
@@ -16,10 +17,8 @@ public class InputMobileJoystick : InputHandler
 
 	public override void _Input(InputEvent @event)
 	{
-		if(@event is InputEventMouseButton)
+		if(@event is InputEventMouseButton || @event is InputEventScreenTouch)
 			joystick.GlobalPosition = joystick.GetGlobalMousePosition();
-		else if(@event is InputEventScreenTouch e)
-			joystick.GlobalPosition = joystick.ToGlobal(e.Position);
 	}
 
 	public override void _Process(float delta)
