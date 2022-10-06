@@ -2,11 +2,13 @@ using Godot;
 
 public class UnitPlayerController : Node
 {
+	public static Unit PlayerUnitInstance { get; private set; }
 	Unit MyUnit, CurrentTargetUnit;
 
 	public override void _Ready()
 	{
 		MyUnit = GetParent<Unit>();
+		PlayerUnitInstance = MyUnit;
 
 		Delay.DoEvery(0.25f, TryAcquireTarget);
 		Delay.DoEvery(0.1f, () => TryShootCurrentTarget(0.1f));
@@ -29,7 +31,7 @@ public class UnitPlayerController : Node
 		var scene = GetNode(World.WorldNodePath);
 		var nodeTarget = scene.GetNode<TargetFollowingUnit>("TargetFollowingUnit");
 		var previousTargetUnit = CurrentTargetUnit;
-		CurrentTargetUnit = MyUnit.AcquireTarget(75);
+		CurrentTargetUnit = MyUnit.AcquireTarget();
 
 		if(CurrentTargetUnit == null || CurrentTargetUnit.IsDead)
 		{

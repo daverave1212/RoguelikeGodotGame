@@ -1,0 +1,173 @@
+[gd_scene load_steps=32 format=2]
+
+[ext_resource path="res://Prefabs/Units/UnitCustomComponents/UnitAnimationHandler.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Prefabs/Units/UnitCustomComponents/TargetAcquirer.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Prefabs/Weapons/WeaponPrefabs/DumbBanditCrossbowWeapon.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scripts/Units/UnitStats.cs" type="Script" id=4]
+[ext_resource path="res://Scripts/Units/Unit.cs" type="Script" id=5]
+[ext_resource path="res://Images/UI/grey_button05.png" type="Texture" id=6]
+[ext_resource path="res://Images/UI/grey_button00.png" type="Texture" id=7]
+[ext_resource path="res://Images/Units/Dwarf Arbelest Sprite Sheet.png" type="Texture" id=8]
+[ext_resource path="res://Prefabs/Units/UnitOptionalCustomComponents/DumbBanditAIController.tscn" type="PackedScene" id=9]
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 4, 1.5 )
+
+[sub_resource type="RectangleShape2D" id=22]
+extents = Vector2( 4.5, 7.5 )
+
+[sub_resource type="AtlasTexture" id=23]
+atlas = ExtResource( 8 )
+region = Rect2( 0, 96, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=24]
+atlas = ExtResource( 8 )
+region = Rect2( 64, 96, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=25]
+atlas = ExtResource( 8 )
+region = Rect2( 128, 96, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=26]
+atlas = ExtResource( 8 )
+region = Rect2( 192, 96, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=27]
+atlas = ExtResource( 8 )
+region = Rect2( 256, 96, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=28]
+atlas = ExtResource( 8 )
+region = Rect2( 320, 96, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=29]
+atlas = ExtResource( 8 )
+region = Rect2( 0, 32, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=30]
+atlas = ExtResource( 8 )
+region = Rect2( 64, 32, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=31]
+atlas = ExtResource( 8 )
+region = Rect2( 128, 32, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=32]
+atlas = ExtResource( 8 )
+region = Rect2( 192, 32, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=33]
+atlas = ExtResource( 8 )
+region = Rect2( 0, 64, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=34]
+atlas = ExtResource( 8 )
+region = Rect2( 64, 64, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=35]
+atlas = ExtResource( 8 )
+region = Rect2( 128, 64, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=36]
+atlas = ExtResource( 8 )
+region = Rect2( 192, 64, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=37]
+atlas = ExtResource( 8 )
+region = Rect2( 256, 64, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=38]
+atlas = ExtResource( 8 )
+region = Rect2( 320, 64, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=39]
+atlas = ExtResource( 8 )
+region = Rect2( 384, 64, 64, 32 )
+
+[sub_resource type="AtlasTexture" id=40]
+atlas = ExtResource( 8 )
+region = Rect2( 448, 64, 64, 32 )
+
+[sub_resource type="SpriteFrames" id=41]
+animations = [ {
+"frames": [ SubResource( 23 ), SubResource( 24 ), SubResource( 25 ), SubResource( 26 ), SubResource( 27 ), SubResource( 28 ) ],
+"loop": false,
+"name": "Attack",
+"speed": 12.0
+}, {
+"frames": [ SubResource( 29 ), SubResource( 30 ), SubResource( 31 ), SubResource( 32 ) ],
+"loop": true,
+"name": "Idle",
+"speed": 10.0
+}, {
+"frames": [ SubResource( 33 ), SubResource( 34 ), SubResource( 35 ), SubResource( 36 ), SubResource( 37 ), SubResource( 38 ), SubResource( 39 ), SubResource( 40 ) ],
+"loop": true,
+"name": "Walk",
+"speed": 12.0
+} ]
+
+[sub_resource type="OccluderPolygon2D" id=21]
+polygon = PoolVector2Array( -4, -3, -4, 0, 4, 0, 4, -3 )
+
+[node name="UnitTemplate" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 3
+script = ExtResource( 5 )
+
+[node name="UnitAIController" parent="." instance=ExtResource( 9 )]
+
+[node name="BroadswordWeapon" parent="." instance=ExtResource( 3 )]
+position = Vector2( -0.999996, -7 )
+
+[node name="HitboxMovement" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -1.5 )
+shape = SubResource( 3 )
+
+[node name="Stats" type="Node" parent="."]
+
+[node name="Current" type="Node" parent="Stats"]
+script = ExtResource( 4 )
+Health = 10.0
+
+[node name="Base" type="Node" parent="Stats"]
+script = ExtResource( 4 )
+Health = 10.0
+
+[node name="Hitboxes" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 8
+
+[node name="HitboxBody" type="CollisionShape2D" parent="Hitboxes"]
+position = Vector2( -0.5, -7.5 )
+shape = SubResource( 22 )
+
+[node name="UnitAnimationHandler" parent="." instance=ExtResource( 1 )]
+
+[node name="HealthBar" type="TextureProgress" parent="."]
+margin_left = -12.0
+margin_top = -25.0
+margin_right = 178.0
+margin_bottom = 24.0
+rect_scale = Vector2( 0.13, 0.1 )
+value = 100.0
+texture_under = ExtResource( 6 )
+texture_progress = ExtResource( 7 )
+texture_progress_offset = Vector2( 2, 2 )
+tint_under = Color( 0.392157, 0, 0, 1 )
+tint_progress = Color( 1, 0, 0, 1 )
+
+[node name="TargetAcquirer" parent="." instance=ExtResource( 2 )]
+position = Vector2( 0, 0 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+light_mask = 2
+frames = SubResource( 41 )
+animation = "Idle"
+frame = 2
+playing = true
+offset = Vector2( 0, -16 )
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource( 21 )
+
+[editable path="TargetAcquirer"]

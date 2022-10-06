@@ -11,6 +11,7 @@ public abstract class Weapon : Sprite
 
 	[Export] public float AttackCooldownSeconds = 1f;
 	[Export] public float Damage = 1f;
+	[Export] public float AttackRange = 75f;
 
 	public override void _Ready()
 	{

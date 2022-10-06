@@ -30,6 +30,11 @@ public class Unit : KinematicBody2D
 	}
 
 	#region API
+	public void PlayAnimation(string animationName)
+	{
+		var animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
+		animatedSprite.Play(animationName);
+	}
 	/// <summary>
 	/// Moves 1 Frame in the given direction.
 	/// Vector2 direction should only have -1, 0 and 1 as values.
@@ -41,13 +46,24 @@ public class Unit : KinematicBody2D
 		MoveAndSlide(direction.Normalized() * myCurrentStats.Speed);
 	}
 	/// <summary>
-	/// Returns the closest Unit within range of me.
+	/// Returns the closest Unit within range of me with a different Tag.
+	/// The range parameter is optional.
+	/// Will use the equipped weapon's range if it's -1, or automatic if no weapon is equipped.
 	/// This should be used inside a _Process function.
 	/// </summary>
-	public Unit AcquireTarget(float range)
+	public Unit AcquireTarget(float range = -1)
 	{
 		var targetAcquirer = GetNode<TargetAcquirer>("TargetAcquirer");
-		return (Unit)targetAcquirer.AcquireTarget(range, this);
+		if (range == -1)
+		{
+			if (EquippedWeapon != null) {
+				return (Unit)targetAcquirer.AcquireTarget(EquippedWeapon.AttackRange);
+			}
+			else
+				return (Unit)targetAcquirer.AcquireTarget();
+		}
+		else
+			return (Unit)targetAcquirer.AcquireTarget(range);
 	}
 	public void ShootWeaponAt(Unit targetToShootAt)
 	{
@@ -71,6 +87,19 @@ public class Unit : KinematicBody2D
 			return;
 
 		myCurrentStats.Health -= fromUnit.EquippedWeapon.Damage;
+		myCurrentStats.Health = Mathf.Clamp(myCurrentStats.Health, 0, myBaseStats.Health);
+
+		UpdateHealthBar();
+
+		if(myCurrentStats.Health == 0)
+			Die();
+	}
+	public void ReceiveHit(float damageAmount, Unit fromUnit = null)
+	{
+		if (myCurrentStats.Health == 0)
+			return;
+			
+		myCurrentStats.Health -= damageAmount;
 		myCurrentStats.Health = Mathf.Clamp(myCurrentStats.Health, 0, myBaseStats.Health);
 
 		UpdateHealthBar();

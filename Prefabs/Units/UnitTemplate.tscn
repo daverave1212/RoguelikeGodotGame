@@ -107,9 +107,11 @@ shape = SubResource( 3 )
 
 [node name="Current" type="Node" parent="Stats"]
 script = ExtResource( 4 )
+Health = 10.0
 
 [node name="Base" type="Node" parent="Stats"]
 script = ExtResource( 4 )
+Health = 10.0
 
 [node name="Hitboxes" type="StaticBody2D" parent="."]
 collision_layer = 4
@@ -141,7 +143,7 @@ position = Vector2( 0, 0 )
 light_mask = 2
 frames = SubResource( 20 )
 animation = "Idle"
-frame = 7
+frame = 2
 playing = true
 offset = Vector2( 0, -16 )
 

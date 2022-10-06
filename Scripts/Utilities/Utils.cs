@@ -698,6 +698,13 @@ public static class Utils
 		return (int)Random(rangeA, rangeB, 0, seed);
 	}
 	/// <summary>
+	/// Generates a random float <see cref="int"/> number in the inclusive range [<paramref name="rangeA"/> - <paramref name="rangeB"/>].
+	/// </summary>
+	public static float RandomFloat(this float rangeA, float rangeB)
+	{
+		var random = new Random();
+		return (float) (random.NextDouble() * (rangeB - rangeA) + rangeA);
+	}
 	/// Returns true only <paramref name="percent"/>% / returns false (100 - <paramref name="percent"/>)% of the times.
 	/// </summary>
 	public static bool HasChance(this int percent)

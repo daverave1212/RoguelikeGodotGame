@@ -3,7 +3,7 @@
 [ext_resource path="res://Scripts/Utilities/TargetAcquirer.cs" type="Script" id=1]
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 50.01
+radius = 140.014
 
 [node name="TargetAcquirer" type="Area2D"]
 position = Vector2( -1, -7 )

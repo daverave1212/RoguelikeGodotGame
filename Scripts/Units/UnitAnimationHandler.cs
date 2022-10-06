@@ -24,9 +24,9 @@ public class UnitAnimationHandler : Node
 
 		var animatedSprite = UnitParent.GetNode<AnimatedSprite>("AnimatedSprite");
 
-		if(InputHandler.MoveDirection.x < 0)
+		if(deltaX < 0)
 			animatedSprite.FlipH = true;
-		else if(InputHandler.MoveDirection.x > 0)
+		else if(deltaX > 0)
 			animatedSprite.FlipH = false;
 
 		if(didMove && CurrentAnimationState == AnimationStates.Idle)

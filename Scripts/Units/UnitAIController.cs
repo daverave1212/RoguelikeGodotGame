@@ -4,7 +4,7 @@ using Godot;
 
 public class UnitAIController : Node
 {
-	private Unit MyUnit;
+	protected Unit MyUnit;
 
 	public override void _Ready()
 	{

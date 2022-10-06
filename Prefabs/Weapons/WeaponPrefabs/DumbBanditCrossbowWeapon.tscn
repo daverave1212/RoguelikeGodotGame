@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/Weapons/DumbBanditCrossbowWeapon.cs" type="Script" id=1]
+
+[node name="BroadswordWeapon" type="Sprite"]
+position = Vector2( 40.75, 21.6875 )
+scale = Vector2( 1.50781, 2.95833 )
+script = ExtResource( 1 )
+Damage = 3.0
+AttackRange = 500.0
