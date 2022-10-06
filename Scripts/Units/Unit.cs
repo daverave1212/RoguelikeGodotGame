@@ -2,42 +2,34 @@ using Godot;
 
 public class Unit : KinematicBody2D
 {
-	StatsComponent MyStats;
-	Vector2 PreviousFramePosition;
-	Vector2 CurrentFramePosition;
+	const float SHOOT_Y_OFFSET = -8f;
+
+	private UnitStats myCurrentStats, myBaseStats;
+	private Vector2 previousFramePosition, currentFramePosition;
+	private TextureProgress healthBar;
+
+	public bool IsDead => myCurrentStats.Health == 0;
+	public bool IsMoving => previousFramePosition.x != currentFramePosition.x && previousFramePosition.y != currentFramePosition.y;
+	public bool IsPlayer => HasNode("UnitPlayerController");
+	public bool IsEnemy => HasNode("UnitAIController");
+	public Tag Tag => IsPlayer ? Tag.Player : Tag.Enemy;
+	public Weapon EquippedWeapon => Utils.GetNodeByType<Weapon>(this);
 
 	public override void _Ready()
 	{
-		MyStats = GetNode<StatsComponent>("StatsComponent");
-		CurrentFramePosition = GlobalPosition;
-		PreviousFramePosition = GlobalPosition;
+		myCurrentStats = GetNode<UnitStats>("Stats/Current");
+		myBaseStats = GetNode<UnitStats>("Stats/Base");
+		healthBar = GetNode<TextureProgress>("HealthBar");
+		currentFramePosition = GlobalPosition;
+		previousFramePosition = GlobalPosition;
 	}
 	public override void _PhysicsProcess(float deltaTime)
 	{
-		PreviousFramePosition = CurrentFramePosition;
-		CurrentFramePosition = GlobalPosition;
+		previousFramePosition = currentFramePosition;
+		currentFramePosition = GlobalPosition;
 	}
 
-
-
-
-
-
-	// --------- API ----------
-	public OwnerTag GetOwnerTag()
-	{
-		if(IsPlayerUnit()) return OwnerTag.Player;
-		return OwnerTag.Enemy;
-	}
-	public bool IsPlayerUnit()
-	{
-		return HasNode("UnitPlayerController");
-	}
-	public bool IsEnemyUnit()
-	{
-		return HasNode("UnitAIController");
-	}
-
+	#region API
 	/// <summary>
 	/// Moves 1 Frame in the given direction.
 	/// Vector2 direction should only have -1, 0 and 1 as values.
@@ -46,15 +38,7 @@ public class Unit : KinematicBody2D
 	/// </summary>
 	public void MoveInDirection(Vector2 direction)
 	{
-		MoveAndSlide(direction.Normalized() * MyStats.Speed);
-	}
-	public bool IsNotMoving()
-	{
-		return (PreviousFramePosition.x == CurrentFramePosition.x && PreviousFramePosition.y == CurrentFramePosition.y);
-	}
-	public bool IsMoving()
-	{
-		return !IsNotMoving();
+		MoveAndSlide(direction.Normalized() * myCurrentStats.Speed);
 	}
 	/// <summary>
 	/// Returns the closest Unit within range of me.
@@ -62,7 +46,7 @@ public class Unit : KinematicBody2D
 	/// </summary>
 	public Unit AcquireTarget(float range)
 	{
-		TargetAcquirer targetAcquirer = GetNode<TargetAcquirer>("TargetAcquirer");
+		var targetAcquirer = GetNode<TargetAcquirer>("TargetAcquirer");
 		return (Unit)targetAcquirer.AcquireTarget(range, this);
 	}
 	public void ShootWeaponAt(Unit targetToShootAt)
@@ -78,10 +62,32 @@ public class Unit : KinematicBody2D
 			GD.Print($"Unit {Name} has no weapon equipped. Add as child node a Sprite with a T: Weapon script.");
 			return;
 		}
-		weaponEquipped.Shoot(GlobalPosition, targetToShootAt.GlobalPosition);
+		weaponEquipped.Shoot(GlobalPosition, targetToShootAt.GlobalPosition + new Vector2(0, SHOOT_Y_OFFSET));
 	}
-	public Weapon GetEquippedWeapon()
+
+	public void ReceiveHit(Unit fromUnit)
 	{
-		return Utils.GetNodeByType<Weapon>(this);
+		if(myCurrentStats.Health == 0)
+			return;
+
+		myCurrentStats.Health -= fromUnit.EquippedWeapon.Damage;
+		myCurrentStats.Health = Mathf.Clamp(myCurrentStats.Health, 0, myBaseStats.Health);
+
+		UpdateHealthBar();
+
+		if(myCurrentStats.Health == 0)
+			Die();
 	}
+
+	private void Die()
+	{
+
+	}
+	private void UpdateHealthBar()
+	{
+		healthBar.MinValue = 0;
+		healthBar.MaxValue = myBaseStats.Health;
+		healthBar.Value = myCurrentStats.Health;
+	}
+	#endregion
 }

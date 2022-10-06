@@ -7,8 +7,9 @@
 radius = 5.0
 
 [node name="Bullet" type="Area2D"]
+collision_layer = 8
+collision_mask = 13
 script = ExtResource( 1 )
-BulletOwner = 0
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )

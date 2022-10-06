@@ -4,117 +4,97 @@ using System.Collections.Generic;
 using Godot;
 
 /// <summary>
-/// Use the static methods DoAfter and DoEvery for time functionality.
+/// Use <see cref="DoAfter"/> and <see cref="DoEvery"/> to delay method calls.
 /// </summary>
 public class Delay : Node
 {
-	public abstract class Ticker
+	private class Timer
 	{
-		public float Time { get; set; }
-
-		public Ticker(float seconds) => Time = seconds;
-
-		public abstract void Update(float dt);
-		public abstract void Reset();
-	}
-	public class Timer : Ticker
-	{
-		public Timer(float seconds) : base(seconds) { }
-		public override void Update(float dt) => Time += dt;
-		public override void Reset() => Time = 0;
-	}
-	public class Countdown : Ticker
-	{
-		private Action method;
-
-		public bool IsLooping { get; set; }
-		public float Delay { get; set; }
+		public Action method;
+		public bool isLooping;
+		public float delay, time;
 		public bool IsDisposed => method == null;
 
-		public Countdown(float seconds, bool isLooping, Action method) : base(seconds)
+		public Timer(float seconds, bool isLooping, Action method)
 		{
-			Time = seconds;
-			Delay = seconds;
-			IsLooping = isLooping;
+			delay = seconds;
+			this.isLooping = isLooping;
 			this.method = method;
 		}
 
-		public override void Update(float dt)
+		public void Update(float dt)
 		{
-			Time += dt;
+			time += dt;
 
-			if(Time > 0)
+			if(time < delay)
 				return;
 
 			Trigger(true);
 
-			if(IsLooping == false)
+			if(isLooping == false)
 				Dispose();
 		}
-		public override void Reset()
+		public void Restart()
 		{
-			Time = Delay;
+			time = 0;
 		}
 		public void Trigger(bool reset)
 		{
 			method?.Invoke();
+
 			if(reset)
-				Reset();
+				Restart();
 		}
 
-		/// <summary>
-		/// Nulls out the method just in case so that it can be GC-ed.
-		/// </summary>
 		private void Dispose()
 		{
 			method = null;
 		}
 	}
-
-	private readonly static List<Countdown> countdowns = new List<Countdown>();
 	private readonly static List<Timer> timers = new List<Timer>();
-	private void ProcessList<T>(List<T> list, float dt) where T : Ticker
+
+	public override void _Process(float delta)
 	{
-		var toBeRemoved = new List<T>();
-		for(int i = 0; i < list.Count; i++)
+		var toBeRemoved = new List<Timer>();
+		for(int i = 0; i < timers.Count; i++)
 		{
-			var timer = list[i];
+			var timer = timers[i];
 
-			timer.Update(dt);
+			timer.Update(delta);
 
-			if(timer is Countdown cd && cd.IsDisposed)
+			if(timer.IsDisposed)
 				toBeRemoved.Add(timer);
 		}
 
 		for(int i = 0; i < toBeRemoved.Count; i++)
 		{
 			var timer = toBeRemoved[i];
-			list.Remove(timer);
+			timers.Remove(timer);
 		}
 	}
 
-	public override void _Process(float delta)
+	public static void DoAfter(float seconds, Action method)
 	{
-		ProcessList(countdowns, delta);
-		ProcessList(timers, delta);
+		timers.Add(new Timer(seconds, false, method));
 	}
+	public static void DoEvery(float seconds, Action method)
+	{
+		timers.Add(new Timer(seconds, true, method));
+	}
+	public static void Cancel(Action method)
+	{
+		var timersToRemove = new List<Timer>();
+		for(int i = 0; i < timers.Count; i++)
+			if(timers[i].method == method)
+				timersToRemove.Add(timers[i]);
 
-	public static Countdown DoAfter(float seconds, Action method)
-	{
-		var cd = new Countdown(seconds, false, method);
-		countdowns.Add(cd);
-		return cd;
+		for(int i = 0; i < timersToRemove.Count; i++)
+			timers.Remove(timersToRemove[i]);
 	}
-	public static Countdown DoEvery(float seconds, Action method)
+	public static void AddOffset(float secondsOffset, Action method)
 	{
-		var cd = new Countdown(seconds, true, method);
-		countdowns.Add(cd);
-		return cd;
-	}
-	public static Timer StartTimer(float seconds)
-	{
-		var timer = new Timer(seconds);
-		timers.Add(timer);
-		return timer;
+		for(int i = 0; i < timers.Count; i++)
+			if(timers[i].method == method)
+				timers[i].delay += secondsOffset;
 	}
 }

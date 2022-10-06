@@ -1,0 +1,19 @@
+[gd_resource type="Theme" load_steps=5 format=2]
+
+[sub_resource type="StreamTexture" id=3]
+load_path = "res://.import/green_button13.png-7b7bf83b37f3222c180af80ad8f1c2c1.stex"
+
+[sub_resource type="StyleBoxTexture" id=1]
+texture = SubResource( 3 )
+region_rect = Rect2( 0, 0, 190, 49 )
+
+[sub_resource type="StreamTexture" id=4]
+load_path = "res://.import/green_button00.png-4f063979393bf5dda3f3d88c22b099b5.stex"
+
+[sub_resource type="StyleBoxTexture" id=2]
+texture = SubResource( 4 )
+region_rect = Rect2( 0, 0, 190, 49 )
+
+[resource]
+ProgressBar/styles/bg = SubResource( 1 )
+ProgressBar/styles/fg = SubResource( 2 )

@@ -58,6 +58,13 @@ tap={
  ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="Terrain"
+2d_physics/layer_2="UnitsMovement"
+2d_physics/layer_3="UnitsHitbox"
+2d_physics/layer_4="Projectiles"
+
 [physics]
 
 common/enable_pause_aware_picking=true

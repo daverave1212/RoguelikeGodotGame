@@ -1,15 +1,17 @@
 using Godot;
-using System;
 
 public class BroadswordWeapon : Weapon
 {
-	
+	public BroadswordWeapon()
+	{
+		Damage = 10f;
+	}
+
 	public override void Shoot(Vector2 fromPos, Vector2 toPos)
 	{
-		GD.Print($"Shooting from {fromPos} to {toPos}");
-		SpawnBullet("Bullet", fromPos, toPos, delegate (Unit unitHit)
+		ShootBulletTowardPosition("Bullet", fromPos, toPos, (unitHit) =>
 		{
-			GD.Print("BAM!");
+			unitHit.ReceiveHit(MyUnit);
 		});
 	}
 }

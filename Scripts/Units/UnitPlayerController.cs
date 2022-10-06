@@ -2,20 +2,15 @@ using Godot;
 
 public class UnitPlayerController : Node
 {
-	StatsComponent MyStats;
-	Unit MyUnit;
-
-	Unit CurrentTargetUnit;
+	Unit MyUnit, CurrentTargetUnit;
 
 	public override void _Ready()
 	{
 		MyUnit = GetParent<Unit>();
-		MyStats = MyUnit.GetNode<StatsComponent>("StatsComponent");
 
-		var timer = Delay.DoEvery(0.25f, TryAcquireTarget);
-		var timer2 = Delay.DoEvery(0.1f, () => TryShootCurrentTarget(0.1f));
+		Delay.DoEvery(0.25f, TryAcquireTarget);
+		Delay.DoEvery(0.1f, () => TryShootCurrentTarget(0.1f));
 	}
-
 	public override void _PhysicsProcess(float delta)
 	{
 		var moveDirection = InputHandler.MoveDirection;
@@ -28,7 +23,6 @@ public class UnitPlayerController : Node
 
 	}
 
-
 	/// <summary> Tries to get a new target unit and moves the visual target over that unit </summary>
 	void TryAcquireTarget()
 	{
@@ -37,9 +31,10 @@ public class UnitPlayerController : Node
 		var previousTargetUnit = CurrentTargetUnit;
 		CurrentTargetUnit = MyUnit.AcquireTarget(75);
 
-		if(CurrentTargetUnit == null)
+		if(CurrentTargetUnit == null || CurrentTargetUnit.IsDead)
 		{
 			nodeTarget.ObjectItIsFollowing = null;
+			CurrentTargetUnit = null;
 			return;
 		}
 		if(CurrentTargetUnit != previousTargetUnit)
@@ -53,16 +48,10 @@ public class UnitPlayerController : Node
 	{
 		timeSinceLastAttack += deltaTime;
 
-		var weapon = MyUnit.GetEquippedWeapon();
+		var weapon = MyUnit.EquippedWeapon;
 
-		if(weapon == null)
-			return;
-		if(CurrentTargetUnit == null)
-			return;
-		if(MyUnit.IsMoving())
-			return;
-		if(timeSinceLastAttack < weapon.AttackCooldownSeconds)
-			return;     // If attack not yet ready, return
+		if(weapon == null || CurrentTargetUnit == null || MyUnit.IsMoving || timeSinceLastAttack < weapon.AttackCooldownSeconds)
+			return; // If attack not yet ready, return
 
 		// Else, if the attack is ready to shoot...
 		MyUnit.ShootWeaponAt(CurrentTargetUnit);
@@ -70,17 +59,7 @@ public class UnitPlayerController : Node
 
 	}
 
-
-
-
-
-
-
-
-
-
-
-	// Test methods; should remove these later
+	#region Test Methods / should remove these later
 	public void __TestTargetAcquisition()
 	{
 		if(Input.IsActionPressed("ui_accept").Once("target-key"))
@@ -137,5 +116,6 @@ public class UnitPlayerController : Node
 		}
 
 	}
+	#endregion
 
 }
