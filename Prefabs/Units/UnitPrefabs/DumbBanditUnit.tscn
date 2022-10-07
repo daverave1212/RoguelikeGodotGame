@@ -1,20 +1,147 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://Prefabs/Units/UnitCustomComponents/UnitAnimationHandler.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Prefabs/Units/UnitCustomComponents/TargetAcquirer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Prefabs/Weapons/WeaponPrefabs/DumbBanditCrossbowWeapon.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scripts/Units/UnitStats.cs" type="Script" id=4]
-[ext_resource path="res://Scripts/Units/Unit.cs" type="Script" id=5]
 [ext_resource path="res://Images/UI/grey_button05.png" type="Texture" id=6]
 [ext_resource path="res://Images/UI/grey_button00.png" type="Texture" id=7]
 [ext_resource path="res://Images/Units/Dwarf Arbelest Sprite Sheet.png" type="Texture" id=8]
 [ext_resource path="res://Prefabs/Units/UnitOptionalCustomComponents/DumbBanditAIController.tscn" type="PackedScene" id=9]
+
+[sub_resource type="CSharpScript" id=42]
+script/source = "using Godot;
+
+public class Unit : KinematicBody2D
+{
+	const float SHOOT_Y_OFFSET = -8f;
+
+	private UnitStats myCurrentStats, myBaseStats;
+	private Vector2 previousFramePosition, currentFramePosition;
+	private TextureProgress healthBar;
+
+	public bool IsDead => myCurrentStats.Health == 0;
+	public bool IsMoving => previousFramePosition.x != currentFramePosition.x && previousFramePosition.y != currentFramePosition.y;
+	public bool IsPlayer => HasNode(\"UnitPlayerController\");
+	public bool IsEnemy => HasNode(\"UnitAIController\");
+	public Tag Tag => IsPlayer ? Tag.Player : Tag.Enemy;
+	public Weapon EquippedWeapon => Utils.GetNodeByType<Weapon>(this);
+
+	public override void _Ready()
+	{
+		myCurrentStats = GetNode<UnitStats>(\"Stats/Current\");
+		myBaseStats = GetNode<UnitStats>(\"Stats/Base\");
+		healthBar = GetNode<TextureProgress>(\"HealthBar\");
+		currentFramePosition = GlobalPosition;
+		previousFramePosition = GlobalPosition;
+	}
+	public override void _PhysicsProcess(float deltaTime)
+	{
+		previousFramePosition = currentFramePosition;
+		currentFramePosition = GlobalPosition;
+	}
+
+	#region API
+	public void PlayAnimation(string animationName)
+	{
+		var animatedSprite = GetNode<AnimatedSprite>(\"AnimatedSprite\");
+		animatedSprite.Play(animationName);
+	}
+	/// <summary>
+	/// Moves 1 Frame in the given direction.
+	/// Vector2 direction should only have -1, 0 and 1 as values.
+	/// Moves using own speed from StatsComponent.
+	/// This should be used inside a _Process function.
+	/// </summary>
+	public void MoveInDirection(Vector2 direction)
+	{
+		MoveAndSlide(direction.Normalized() * myCurrentStats.Speed);
+	}
+	/// <summary>
+	/// Returns the closest Unit within range of me with a different Tag.
+	/// The range parameter is optional.
+	/// Will use the equipped weapon's range if it's -1, or automatic if no weapon is equipped.
+	/// This should be used inside a _Process function.
+	/// </summary>
+	public Unit AcquireTarget(float range = -1)
+	{
+		var targetAcquirer = GetNode<TargetAcquirer>(\"TargetAcquirer\");
+		if (range == -1)
+		{
+			if (EquippedWeapon != null) {
+				return (Unit)targetAcquirer.AcquireTarget(EquippedWeapon.AttackRange);
+			}
+			else
+				return (Unit)targetAcquirer.AcquireTarget();
+		}
+		else
+			return (Unit)targetAcquirer.AcquireTarget(range);
+	}
+	public void ShootWeaponAt(Unit targetToShootAt)
+	{
+		var weaponEquipped = Utils.GetNodeByType<Weapon>(this);
+		if(targetToShootAt == null)
+		{
+			GD.Print($\"Unit {Name} can't shoot a null targetToShootAt, silly!\");
+			return;
+		}
+		if(weaponEquipped == null)
+		{
+			GD.Print($\"Unit {Name} has no weapon equipped. Add as child node a Sprite with a T: Weapon script.\");
+			return;
+		}
+		weaponEquipped.Shoot(GlobalPosition, targetToShootAt.GlobalPosition + new Vector2(0, SHOOT_Y_OFFSET));
+	}
+
+	public void ReceiveHit(Unit fromUnit)
+	{
+		if(myCurrentStats.Health == 0)
+			return;
+
+		myCurrentStats.Health -= fromUnit.EquippedWeapon.Damage;
+		myCurrentStats.Health = Mathf.Clamp(myCurrentStats.Health, 0, myBaseStats.Health);
+
+		UpdateHealthBar();
+
+		if(myCurrentStats.Health == 0)
+			Die();
+	}
+	public void ReceiveHit(float damageAmount, Unit fromUnit = null)
+	{
+		if (myCurrentStats.Health == 0)
+			return;
+			
+		myCurrentStats.Health -= damageAmount;
+		myCurrentStats.Health = Mathf.Clamp(myCurrentStats.Health, 0, myBaseStats.Health);
+
+		UpdateHealthBar();
+
+		if(myCurrentStats.Health == 0)
+			Die();
+	}
+
+	private void Die()
+	{
+
+	}
+	private void UpdateHealthBar()
+	{
+		healthBar.MinValue = 0;
+		healthBar.MaxValue = myBaseStats.Health;
+		healthBar.Value = myCurrentStats.Health;
+	}
+	#endregion
+}
+"
 
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 4, 1.5 )
 
 [sub_resource type="RectangleShape2D" id=22]
 extents = Vector2( 4.5, 7.5 )
+
+[sub_resource type="CircleShape2D" id=43]
+radius = 138.058
 
 [sub_resource type="AtlasTexture" id=23]
 atlas = ExtResource( 8 )
@@ -109,10 +236,10 @@ animations = [ {
 [sub_resource type="OccluderPolygon2D" id=21]
 polygon = PoolVector2Array( -4, -3, -4, 0, 4, 0, 4, -3 )
 
-[node name="UnitTemplate" type="KinematicBody2D"]
+[node name="DumbBanditUnit" type="KinematicBody2D"]
 collision_layer = 2
 collision_mask = 3
-script = ExtResource( 5 )
+script = SubResource( 42 )
 
 [node name="UnitAIController" parent="." instance=ExtResource( 9 )]
 
@@ -159,11 +286,13 @@ tint_progress = Color( 1, 0, 0, 1 )
 [node name="TargetAcquirer" parent="." instance=ExtResource( 2 )]
 position = Vector2( 0, 0 )
 
+[node name="Range" parent="TargetAcquirer" index="0"]
+shape = SubResource( 43 )
+
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 light_mask = 2
 frames = SubResource( 41 )
 animation = "Idle"
-frame = 2
 playing = true
 offset = Vector2( 0, -16 )
 
