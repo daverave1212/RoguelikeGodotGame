@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Prefabs/Units/UnitOptionalCustomComponents/UnitPlayerController.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Prefabs/UI/TargetFollowingUnit.tscn" type="PackedScene" id=2]
@@ -13,131 +13,6 @@
 [ext_resource path="res://Images/UI/AllAxis_Plain.png" type="Texture" id=13]
 [ext_resource path="res://Scripts/InputHandler.cs" type="Script" id=14]
 [ext_resource path="res://Prefabs/Weapons/WeaponPrefabs/BroadswordWeapon.tscn" type="PackedScene" id=16]
-
-[sub_resource type="CSharpScript" id=2]
-script/source = "using Godot;
-
-public class Unit : KinematicBody2D
-{
-	const float SHOOT_Y_OFFSET = -8f;
-
-	private UnitStats myCurrentStats, myBaseStats;
-	private Vector2 previousFramePosition, currentFramePosition;
-	private TextureProgress healthBar;
-
-	public bool IsDead => myCurrentStats.Health == 0;
-	public bool IsMoving => previousFramePosition.x != currentFramePosition.x && previousFramePosition.y != currentFramePosition.y;
-	public bool IsPlayer => HasNode(\"UnitPlayerController\");
-	public bool IsEnemy => HasNode(\"UnitAIController\");
-	public Tag Tag => IsPlayer ? Tag.Player : Tag.Enemy;
-	public Weapon EquippedWeapon => Utils.GetNodeByType<Weapon>(this);
-
-	public override void _Ready()
-	{
-		myCurrentStats = GetNode<UnitStats>(\"Stats/Current\");
-		myBaseStats = GetNode<UnitStats>(\"Stats/Base\");
-		healthBar = GetNode<TextureProgress>(\"HealthBar\");
-		currentFramePosition = GlobalPosition;
-		previousFramePosition = GlobalPosition;
-	}
-	public override void _PhysicsProcess(float deltaTime)
-	{
-		previousFramePosition = currentFramePosition;
-		currentFramePosition = GlobalPosition;
-	}
-
-	#region API
-	public void PlayAnimation(string animationName)
-	{
-		var animatedSprite = GetNode<AnimatedSprite>(\"AnimatedSprite\");
-		animatedSprite.Play(animationName);
-	}
-	/// <summary>
-	/// Moves 1 Frame in the given direction.
-	/// Vector2 direction should only have -1, 0 and 1 as values.
-	/// Moves using own speed from StatsComponent.
-	/// This should be used inside a _Process function.
-	/// </summary>
-	public void MoveInDirection(Vector2 direction)
-	{
-		MoveAndSlide(direction.Normalized() * myCurrentStats.Speed);
-	}
-	/// <summary>
-	/// Returns the closest Unit within range of me with a different Tag.
-	/// The range parameter is optional.
-	/// Will use the equipped weapon's range if it's -1, or automatic if no weapon is equipped.
-	/// This should be used inside a _Process function.
-	/// </summary>
-	public Unit AcquireTarget(float range = -1)
-	{
-		var targetAcquirer = GetNode<TargetAcquirer>(\"TargetAcquirer\");
-		if (range == -1)
-		{
-			if (EquippedWeapon != null) {
-				return (Unit)targetAcquirer.AcquireTarget(EquippedWeapon.AttackRange);
-			}
-			else
-				return (Unit)targetAcquirer.AcquireTarget();
-		}
-		else
-			return (Unit)targetAcquirer.AcquireTarget(range);
-	}
-	public void ShootWeaponAt(Unit targetToShootAt)
-	{
-		var weaponEquipped = Utils.GetNodeByType<Weapon>(this);
-		if(targetToShootAt == null)
-		{
-			GD.Print($\"Unit {Name} can't shoot a null targetToShootAt, silly!\");
-			return;
-		}
-		if(weaponEquipped == null)
-		{
-			GD.Print($\"Unit {Name} has no weapon equipped. Add as child node a Sprite with a T: Weapon script.\");
-			return;
-		}
-		weaponEquipped.Shoot(GlobalPosition, targetToShootAt.GlobalPosition + new Vector2(0, SHOOT_Y_OFFSET));
-	}
-
-	public void ReceiveHit(Unit fromUnit)
-	{
-		if(myCurrentStats.Health == 0)
-			return;
-
-		myCurrentStats.Health -= fromUnit.EquippedWeapon.Damage;
-		myCurrentStats.Health = Mathf.Clamp(myCurrentStats.Health, 0, myBaseStats.Health);
-
-		UpdateHealthBar();
-
-		if(myCurrentStats.Health == 0)
-			Die();
-	}
-	public void ReceiveHit(float damageAmount, Unit fromUnit = null)
-	{
-		if (myCurrentStats.Health == 0)
-			return;
-			
-		myCurrentStats.Health -= damageAmount;
-		myCurrentStats.Health = Mathf.Clamp(myCurrentStats.Health, 0, myBaseStats.Health);
-
-		UpdateHealthBar();
-
-		if(myCurrentStats.Health == 0)
-			Die();
-	}
-
-	private void Die()
-	{
-
-	}
-	private void UpdateHealthBar()
-	{
-		healthBar.MinValue = 0;
-		healthBar.MaxValue = myBaseStats.Health;
-		healthBar.Value = myCurrentStats.Health;
-	}
-	#endregion
-}
-"
 
 [node name="World" type="Node"]
 script = ExtResource( 5 )
@@ -179,15 +54,18 @@ tile_data = PoolIntArray( 65544, 5, 0, 196615, 2, 0, 196617, 2, 2, 262149, 5, 0,
 
 [node name="TargetFollowingUnit" parent="." instance=ExtResource( 2 )]
 scale = Vector2( 0.5, 0.5 )
+z_index = 10
 
 [node name="YSort" type="YSort" parent="."]
 
-[node name="DumbBanditUnit" parent="YSort" instance=ExtResource( 10 )]
-position = Vector2( 47, 172 )
+[node name="Bandit" parent="YSort" instance=ExtResource( 10 )]
+position = Vector2( 65, 150 )
+
+[node name="AnimatedSprite" parent="YSort/Bandit" index="8"]
+frame = 1
 
 [node name="RatPlayer" parent="YSort" instance=ExtResource( 4 )]
 position = Vector2( 160, 176 )
-script = SubResource( 2 )
 
 [node name="BroadswordWeapon" parent="YSort/RatPlayer" instance=ExtResource( 16 )]
 position = Vector2( 1, -7 )
@@ -219,3 +97,6 @@ position = Vector2( 222, 151 )
 position = Vector2( 161, 112 )
 
 [node name="UnitAIController" parent="YSort/RatAI2" instance=ExtResource( 3 )]
+
+[editable path="YSort/Bandit"]
+[editable path="YSort/Bandit/TargetAcquirer"]
