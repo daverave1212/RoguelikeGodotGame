@@ -5,6 +5,7 @@
 [node name="Weapon" type="Sprite"]
 script = ExtResource( 1 )
 __meta__ = {
-"_editor_description_": "The base weapon.
-To create a new weapon, create a copy of this one and give it a new script that inherits Weapon."
+"_editor_description_": "To create a new weapon, create a Scene->Inherited Scene of Weapon.tscn and give it a new script that inherits the Weapon script."
 }
+Damage = 3.0
+AttackRange = 500.0

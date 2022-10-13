@@ -1,22 +1,16 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Scripts/Bullets/Bullet.cs" type="Script" id=1]
+[ext_resource path="res://Prefabs/Weapons/Bullets/Bullet.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Images/Weapons/Missiles/BanditCrossbowArrow.png" type="Texture" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 6.5, 1 )
+extents = Vector2( 9, 3 )
 
-[node name="Bullet" type="Area2D"]
-collision_layer = 8
-collision_mask = 13
-script = ExtResource( 1 )
+[node name="Bullet" instance=ExtResource( 1 )]
 BulletOwner = 2
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Sprite" parent="." index="0"]
 texture = ExtResource( 2 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 0.5, 0 )
+[node name="CollisionShape2D" parent="." index="1"]
 shape = SubResource( 1 )
-
-[connection signal="body_entered" from="." to="." method="_OnBulletBodyEntered"]

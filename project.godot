@@ -74,6 +74,7 @@ tap={
 2d_physics/layer_2="UnitsMovement"
 2d_physics/layer_3="UnitsHitbox"
 2d_physics/layer_4="Projectiles"
+2d_physics/layer_5="TerrainShootOver"
 
 [physics]
 
